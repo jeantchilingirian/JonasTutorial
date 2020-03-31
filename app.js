@@ -14,6 +14,7 @@ const hpp = require('hpp');
 const path = require('path');
 const cookieParser = require('cookie-parser');
 const compression = require('compression');
+const cors = require('cors');
 
 var app = express();
 app.set('view engine', 'pug');
@@ -31,6 +32,9 @@ const limiter = rateLimit({
 app.use('/api', limiter);
 app.use(helmet());
 
+app.options('*', cors());
+//app.options('/api/v1/tours/:id', cors());
+
 app.use(express.json({ limit: '10kb' }));
 app.use(express.urlencoded({ extended: true, limit: '10kb' }));
 app.use(cookieParser());
@@ -45,6 +49,11 @@ app.use(
 );
 
 app.use(compression());
+app.use(cors());
+/*
+app.use(cors({
+  origin: 'https://www.natours.com'
+}));*/
 
 app.use((req, res, next) => {
   req.requestTime = new Date().toISOString();
